@@ -73,6 +73,6 @@ src/
 
 ## 👨‍💻 Autor
 
-Criado por **Edson Melo | epmsoft**  
+Criado por **Equipe Hora do Remédio | epmsoft**  
 📌 Projeto para estudos de **React Native** com foco em controle de medicamentos e pacientes.
 " > README.md
