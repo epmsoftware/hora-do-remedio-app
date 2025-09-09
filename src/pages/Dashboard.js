@@ -11,6 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CommonActions } from "@react-navigation/native";
 
 export default function Dashboard({ navigation }) {
   const [usuario, setUsuario] = useState(null);
@@ -25,14 +26,29 @@ export default function Dashboard({ navigation }) {
     const carregarUsuario = async () => {
       const dados = await AsyncStorage.getItem("usuarioLogado");
       if (dados) setUsuario(JSON.parse(dados));
+      else redirectLogin(); // força voltar para Login se não logado
     };
     const unsubscribe = navigation.addListener("focus", carregarUsuario);
     return unsubscribe;
   }, [navigation]);
 
+  const redirectLogin = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "TelaInicial" }],
+      })
+    );
+  };
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem("usuarioLogado");
-    navigation.replace("Login");
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "TelaInicial" }],
+      })
+    );
   };
 
   const toggleMenu = () => {
@@ -63,13 +79,16 @@ export default function Dashboard({ navigation }) {
           {
             top: STATUS_BAR_HEIGHT + 60,
             left: slideAnim,
-            paddingBottom: insets.bottom + 10, // 👈 respeita barra inferior
+            paddingBottom: insets.bottom + 10, // respeita barra inferior
           },
         ]}
       >
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("Dashboard")}
+          onPress={() => {
+            if (menuAberto) toggleMenu(); // fecha o menu
+            navigation.navigate("Dashboard"); // vai para dashboard
+          }}
         >
           <Icon name="home" size={18} color="#fff" />
           <Text style={styles.menuText}>Dashboard</Text>
@@ -77,7 +96,10 @@ export default function Dashboard({ navigation }) {
 
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("ListaPacientes")}
+          onPress={() => {
+            if (menuAberto) toggleMenu(); // fecha o menu
+            navigation.navigate("ListaPacientes"); // vai para dashboard
+          }}
         >
           <Icon name="user" size={18} color="#fff" />
           <Text style={styles.menuText}>Pacientes</Text>

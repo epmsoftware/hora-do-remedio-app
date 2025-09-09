@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CommonActions } from '@react-navigation/native'; // import necessário
 
 export default function CadastroPaciente({ navigation, route }) {
   const [pacientes, setPacientes] = useState([]);
@@ -23,7 +24,7 @@ export default function CadastroPaciente({ navigation, route }) {
   const [descricao, setDescricao] = useState('');
   const [usuarioLogado, setUsuarioLogado] = useState(null);
 
-  const insets = useSafeAreaInsets(); // 👈 pega margens seguras (topo/baixo)
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -88,18 +89,35 @@ export default function CadastroPaciente({ navigation, route }) {
       setPacientes(listaAtualizada);
 
       showAlert('Sucesso', 'Paciente salvo com sucesso!');
-      navigation.goBack();
+
+      // Resetando pilha de navegação para não voltar à tela anterior
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'ListaPacientes' }],
+        })
+      );
     } catch (err) {
       console.log('Erro ao salvar paciente:', err);
       showAlert('Erro', 'Não foi possível salvar o paciente.');
     }
   };
 
+  const handleVoltar = () => {
+    // Resetando navegação ao voltar
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'ListaPacientes' }],
+      })
+    );
+  };
+
   return (
     <ScrollView
       contentContainerStyle={[
         styles.container,
-        { paddingBottom: insets.bottom + 20 }, // 👈 garante espaço extra no fim
+        { paddingBottom: insets.bottom + 20 },
       ]}
     >
       <Text style={styles.title}>Cadastro de Paciente</Text>
@@ -159,7 +177,7 @@ export default function CadastroPaciente({ navigation, route }) {
 
       <TouchableOpacity
         style={[styles.button, styles.backButton]}
-        onPress={() => navigation.goBack()}
+        onPress={handleVoltar}
       >
         <Text style={styles.buttonText}>Voltar para Lista</Text>
       </TouchableOpacity>
@@ -195,6 +213,6 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
   backButton: {
-    backgroundColor: '#808080', // cinza para diferenciar
+    backgroundColor: '#808080',
   },
 });
