@@ -106,7 +106,7 @@ export default function ListaPacientes({ navigation }) {
           data={pacientes}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: insets.bottom + 100 }} // garante espaço seguro
+          contentContainerStyle={{ paddingBottom: insets.bottom + 140 }} // garante espaço seguro
         />
       )}
 
@@ -153,9 +153,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 10,
     right: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'columm',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  navButton: { paddingVertical: 12, paddingHorizontal: 15, borderRadius: 25 },
-  navButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  navButton: { 
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    marginTop: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  navButtonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
 });

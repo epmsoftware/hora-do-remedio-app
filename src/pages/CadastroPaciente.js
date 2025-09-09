@@ -10,6 +10,7 @@ import {
   Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function CadastroPaciente({ navigation, route }) {
   const [pacientes, setPacientes] = useState([]);
@@ -21,6 +22,8 @@ export default function CadastroPaciente({ navigation, route }) {
   const [telefone, setTelefone] = useState('');
   const [descricao, setDescricao] = useState('');
   const [usuarioLogado, setUsuarioLogado] = useState(null);
+
+  const insets = useSafeAreaInsets(); // 👈 pega margens seguras (topo/baixo)
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -93,7 +96,12 @@ export default function CadastroPaciente({ navigation, route }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        { paddingBottom: insets.bottom + 20 }, // 👈 garante espaço extra no fim
+      ]}
+    >
       <Text style={styles.title}>Cadastro de Paciente</Text>
 
       <TextInput
@@ -160,7 +168,12 @@ export default function CadastroPaciente({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, padding: 20, backgroundColor: '#f2f2f2', alignItems: 'center' },
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#f2f2f2',
+    alignItems: 'center',
+  },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   input: {
     width: '100%',
@@ -173,8 +186,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#1e90ff',
-    paddingVertical: 14,
-    paddingHorizontal: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     borderRadius: 25,
     marginTop: 10,
     width: '100%',

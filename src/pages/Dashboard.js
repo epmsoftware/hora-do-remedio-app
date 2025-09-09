@@ -10,13 +10,16 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Dashboard({ navigation }) {
   const [usuario, setUsuario] = useState(null);
   const [menuAberto, setMenuAberto] = useState(false);
   const slideAnim = useRef(new Animated.Value(-200)).current;
 
-  const STATUS_BAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 40;
+  const insets = useSafeAreaInsets();
+  const STATUS_BAR_HEIGHT =
+    Platform.OS === "android" ? StatusBar.currentHeight : insets.top;
 
   useEffect(() => {
     const carregarUsuario = async () => {
@@ -45,16 +48,25 @@ export default function Dashboard({ navigation }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* CABEÇÁRIO FIXO ABAIXO DA STATUS BAR */}
+      {/* CABEÇALHO FIXO ABAIXO DA STATUS BAR */}
       <View style={[styles.header, { paddingTop: STATUS_BAR_HEIGHT }]}>
         <TouchableOpacity onPress={toggleMenu} style={styles.barsButton}>
           <Icon name="bars" size={24} color="#1e90ff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Dashboard</Text>
+        <Text style={styles.headerTitle}>Hora do Remédio</Text>
       </View>
 
-      {/* MENU LATERAL RETRÁTIL ABAIXO DO CABEÇÁRIO */}
-      <Animated.View style={[styles.menu, { top: STATUS_BAR_HEIGHT + 30, left: slideAnim }]}>
+      {/* MENU LATERAL RETRÁTIL ABAIXO DO CABEÇALHO */}
+      <Animated.View
+        style={[
+          styles.menu,
+          {
+            top: STATUS_BAR_HEIGHT + 60,
+            left: slideAnim,
+            paddingBottom: insets.bottom + 10, // 👈 respeita barra inferior
+          },
+        ]}
+      >
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => navigation.navigate("Dashboard")}
@@ -94,7 +106,12 @@ export default function Dashboard({ navigation }) {
       </Animated.View>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <View style={[styles.conteudo, { marginTop: STATUS_BAR_HEIGHT + 60 }]}>
+      <View
+        style={[
+          styles.conteudo,
+          { marginTop: STATUS_BAR_HEIGHT + 60, paddingBottom: insets.bottom },
+        ]}
+      >
         {usuario ? (
           <>
             <Text style={styles.title}>Bem-vindo, {usuario.usuario}!</Text>
@@ -125,12 +142,12 @@ const styles = StyleSheet.create({
 
   menu: {
     position: "absolute",
-    bottom: 0,
     width: 200,
     backgroundColor: "#1e90ff",
     paddingVertical: 10,
     paddingHorizontal: 10,
     zIndex: 9,
+    borderRadius: 8,
   },
   menuItem: {
     flexDirection: "row",
