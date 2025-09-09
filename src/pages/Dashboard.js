@@ -1,51 +1,155 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  StatusBar,
+  Platform,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function Dashboard({ navigation }) {
   const [usuario, setUsuario] = useState(null);
+  const [menuAberto, setMenuAberto] = useState(false);
+  const slideAnim = useRef(new Animated.Value(-200)).current;
+
+  const STATUS_BAR_HEIGHT = Platform.OS === "android" ? StatusBar.currentHeight : 40;
 
   useEffect(() => {
     const carregarUsuario = async () => {
-      try {
-        const dados = await AsyncStorage.getItem('usuarioLogado');
-        if (dados) setUsuario(JSON.parse(dados));
-      } catch (err) {
-        console.log('Erro ao carregar usuário:', err);
-      }
+      const dados = await AsyncStorage.getItem("usuarioLogado");
+      if (dados) setUsuario(JSON.parse(dados));
     };
-
-    const unsubscribe = navigation.addListener('focus', carregarUsuario);
+    const unsubscribe = navigation.addListener("focus", carregarUsuario);
     return unsubscribe;
   }, [navigation]);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('usuarioLogado');
-    navigation.replace('Login');
+    await AsyncStorage.removeItem("usuarioLogado");
+    navigation.replace("Login");
+  };
+
+  const toggleMenu = () => {
+    setMenuAberto(!menuAberto);
+    Animated.timing(slideAnim, {
+      toValue: menuAberto ? -200 : 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
   };
 
   return (
     <View style={styles.container}>
-      {usuario ? (
-        <>
-          <Text style={styles.title}>Bem-vindo, {usuario.usuario}!</Text>
-          <Text style={styles.info}>Aqui você verá apenas seus dados.</Text>
-        </>
-      ) : (
-        <Text style={styles.title}>Carregando usuário...</Text>
-      )}
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Sair</Text>
-      </TouchableOpacity>
+      {/* CABEÇÁRIO FIXO ABAIXO DA STATUS BAR */}
+      <View style={[styles.header, { paddingTop: STATUS_BAR_HEIGHT }]}>
+        <TouchableOpacity onPress={toggleMenu} style={styles.barsButton}>
+          <Icon name="bars" size={24} color="#1e90ff" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Dashboard</Text>
+      </View>
+
+      {/* MENU LATERAL RETRÁTIL ABAIXO DO CABEÇÁRIO */}
+      <Animated.View style={[styles.menu, { top: STATUS_BAR_HEIGHT + 30, left: slideAnim }]}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("Dashboard")}
+        >
+          <Icon name="home" size={18} color="#fff" />
+          <Text style={styles.menuText}>Dashboard</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("ListaPacientes")}
+        >
+          <Icon name="user" size={18} color="#fff" />
+          <Text style={styles.menuText}>Pacientes</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => alert("Em breve...")}
+        >
+          <Icon name="users" size={18} color="#fff" />
+          <Text style={styles.menuText}>Usuários</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => alert("Em breve...")}
+        >
+          <Icon name="cog" size={18} color="#fff" />
+          <Text style={styles.menuText}>Configurações</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+          <Icon name="sign-out-alt" size={18} color="red" />
+          <Text style={[styles.menuText, { color: "red" }]}>Sair</Text>
+        </TouchableOpacity>
+      </Animated.View>
+
+      {/* CONTEÚDO PRINCIPAL */}
+      <View style={[styles.conteudo, { marginTop: STATUS_BAR_HEIGHT + 60 }]}>
+        {usuario ? (
+          <>
+            <Text style={styles.title}>Bem-vindo, {usuario.usuario}!</Text>
+            <Text style={styles.info}>Aqui você verá apenas seus dados.</Text>
+          </>
+        ) : (
+          <Text style={styles.title}>Carregando usuário...</Text>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f2f2f2', padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  container: { flex: 1, backgroundColor: "#f2f2f2" },
+
+  header: {
+    height: 60,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    elevation: 5,
+    zIndex: 10,
+  },
+  barsButton: { marginRight: 15 },
+  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#1e90ff" },
+
+  menu: {
+    position: "absolute",
+    bottom: 0,
+    width: 200,
+    backgroundColor: "#1e90ff",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    zIndex: 9,
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  menuText: { fontSize: 16, color: "#fff", fontWeight: "600", marginLeft: 8 },
+
+  conteudo: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
   info: { fontSize: 16, marginBottom: 20 },
-  button: { backgroundColor: '#1e90ff', paddingVertical: 12, paddingHorizontal: 25, borderRadius: 25 },
-  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
 });

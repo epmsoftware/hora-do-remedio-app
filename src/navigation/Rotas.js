@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TelaInicial from '../pages/TelaInicial';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
+import CadastroPaciente from '../pages/CadastroPaciente';
+import ListaPacientes from '../pages/ListaPacientes';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,11 @@ export default function Rotas() {
 
         {/* Área protegida após login */}
         <Stack.Screen name="Dashboard" component={Dashboard} />
+
+        <Stack.Screen name="CadastroPaciente" component={CadastroPaciente} />
+
+        <Stack.Screen name="ListaPacientes" component={ListaPacientes} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
