@@ -1,13 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  StatusBar,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -136,7 +128,7 @@ export default function Dashboard({ navigation }) {
       >
         {usuario ? (
           <>
-            <Text style={styles.title}>Bem-vindo, {usuario.usuario}!</Text>
+            <Text style={styles.title}>Bem-vindo, {usuario.email}!</Text>
             <Text style={styles.info}>Aqui você verá apenas seus dados.</Text>
           </>
         ) : (
@@ -148,8 +140,10 @@ export default function Dashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f2f2f2" },
-
+  container: { 
+    flex: 1, 
+    backgroundColor: "#f2f2f2" 
+  },
   header: {
     height: 60,
     backgroundColor: "#fff",
@@ -160,8 +154,11 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   barsButton: { marginRight: 15 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#1e90ff" },
-
+  headerTitle: { 
+    fontSize: 20, 
+    fontWeight: "bold", 
+    color: "#1e90ff" 
+  },
   menu: {
     position: "absolute",
     width: 200,
@@ -181,14 +178,26 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "rgba(255,255,255,0.1)",
   },
-  menuText: { fontSize: 16, color: "#fff", fontWeight: "600", marginLeft: 8 },
-
+  menuText: { 
+    fontSize: 16, 
+    color: "#fff", 
+    fontWeight: "600", 
+    marginLeft: 8 
+  },
   conteudo: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
-  info: { fontSize: 16, marginBottom: 20 },
+  title: { 
+    fontSize: 24, 
+    fontWeight: "bold", 
+    marginBottom: 10, 
+    maxWidth: "80%" 
+  },
+  info: { 
+    fontSize: 16, 
+    marginBottom: 20 
+  },
 });

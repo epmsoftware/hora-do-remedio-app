@@ -1,23 +1,23 @@
-echo "# 💊 Hora do Remédio
+echo "# Hora do Remédio
 
 Projeto em **React Native + AsyncStorage** para controle de medicamentos, usuários e pacientes, com menu lateral retrátil, dashboard e cadastro simples.
 
 ---
 
-## 📌 Funcionalidades
+## Funcionalidades
 
-- ✅ **Login e autenticação simples** (AsyncStorage)
-- ✅ **Menu lateral retrátil com ícones**
-- ✅ **Dashboard inicial**
-- ✅ **Cadastro de pacientes** (com dados vinculados ao usuário logado)
-- ✅ **Lista de pacientes** (somente do usuário logado)
-- ✅ **Configurações e gerenciamento de usuários**
-- ✅ **Armazenamento local** usando \`@react-native-async-storage/async-storage\`
-- ✅ **Responsividade** (ajustes com SafeArea para não sobrepor ícones do celular)
+- **Login e autenticação simples** (AsyncStorage)
+- **Menu lateral retrátil com ícones**
+- **Dashboard inicial**
+- **Cadastro de pacientes** (com dados vinculados ao usuário logado)
+- **Lista de pacientes** (somente do usuário logado)
+- **Configurações e gerenciamento de usuários**
+- **Armazenamento local** usando \`@react-native-async-storage/async-storage\`
+- **Responsividade** (ajustes com SafeArea para não sobrepor ícones do celular)
 
 ---
 
-## 📂 Estrutura de Pastas
+## Estrutura de Pastas
 
 \`\`\`
 src/
@@ -33,7 +33,7 @@ src/
 
 ---
 
-## 🚀 Como rodar o projeto
+## Como rodar o projeto
 
 1. Clone o repositório:
    \`\`\`bash
@@ -61,7 +61,7 @@ src/
 
 ---
 
-## 📸 Telas implementadas
+## Telas implementadas
 
 - **Dashboard**
 - **Cadastro de Paciente**
@@ -71,8 +71,8 @@ src/
 
 ---
 
-## 👨‍💻 Autor
+## Autor
 
 Criado por **Equipe Hora do Remédio | epmsoft**  
-📌 Projeto para estudos de **React Native** com foco em controle de medicamentos e pacientes.
+Projeto para estudos de **React Native** com foco em controle de medicamentos e pacientes.
 " > README.md

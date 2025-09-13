@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ScrollView,
-  Platform
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CommonActions } from '@react-navigation/native'; // import necessário
@@ -78,7 +69,7 @@ export default function CadastroPaciente({ navigation, route }) {
       email,
       telefone,
       descricao,
-      usuario: usuarioLogado.usuario,
+      usuario: usuarioLogado.uid,
     };
 
     const listaAtualizada = pacientes.filter(p => p.id !== novoPaciente.id);
@@ -192,7 +183,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     alignItems: 'center',
   },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 20 
+  },
   input: {
     width: '100%',
     padding: 12,
@@ -211,7 +206,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
+  buttonText: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: '600' 
+  },
   backButton: {
     backgroundColor: '#808080',
   },

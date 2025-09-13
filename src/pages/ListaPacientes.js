@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Platform,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,9 +15,10 @@ export default function ListaPacientes({ navigation }) {
 
       if (dados) {
         const listaCompleta = JSON.parse(dados);
-        const listaFiltrada = usuario
-          ? listaCompleta.filter(p => p.usuario === usuario.usuario)
-          : listaCompleta;
+        const usuarioUid = usuario ? usuario.uid : null;
+        const listaFiltrada = usuarioUid
+          ? listaCompleta.filter(p => p.usuario === usuarioUid)
+          : [];
         setPacientes(listaFiltrada);
       } else {
         setPacientes([]);
@@ -142,12 +135,30 @@ const styles = StyleSheet.create({
       ? { boxShadow: '0px 2px 4px rgba(0,0,0,0.2)' }
       : { elevation: 3 }),
   },
-  nome: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
-  acoes: { justifyContent: 'center', alignItems: 'center', marginLeft: 10 },
-  button: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 10 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
-  msg: { textAlign: 'center', fontSize: 18, marginTop: 20, color: '#555' },
-
+  nome: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 5 
+  },
+  acoes: { 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginLeft: 10 
+  },
+  button: { 
+    paddingVertical: 8, 
+    paddingHorizontal: 12, 
+    borderRadius: 10 
+  },
+  buttonText: { 
+    color: '#fff', 
+    fontWeight: 'bold' 
+  },
+  msg: { textAlign: 'center', 
+    fontSize: 18, 
+    marginTop: 20, 
+    color: '#555' 
+  },
   bottomButtons: {
     position: 'absolute',
     bottom: 0,
@@ -165,5 +176,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  navButtonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
+  navButtonText: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: '600' 
+  },
 });
