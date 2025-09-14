@@ -128,7 +128,7 @@ export default function Dashboard({ navigation }) {
       >
         {usuario ? (
           <>
-            <Text style={styles.title}>Bem-vindo, {usuario.email}!</Text>
+            <Text style={styles.title}>Bem-vindo, {usuario.email.replace("@login.local", "")}!</Text>
             <Text style={styles.info}>Aqui você verá apenas seus dados.</Text>
           </>
         ) : (

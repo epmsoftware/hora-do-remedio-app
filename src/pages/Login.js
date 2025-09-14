@@ -5,7 +5,7 @@ import { auth } from "../../firebaseConfig";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginCadastro({ navigation }) {
-  const [email, setEmail] = useState("");
+  const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
   const [usuariosExistem, setUsuariosExistem] = useState(true); // assume login primeiro
 
@@ -14,22 +14,25 @@ export default function LoginCadastro({ navigation }) {
     else Alert.alert(titulo, mensagem);
   };
 
+  // Função auxiliar para formatar "usuario" como email fake
+  const formatUser = (nomeUsuario) => `${nomeUsuario}@login.local`;
+
   const handleLogin = async () => {
-    if (!email || !senha) {
+    if (!usuario || !senha) {
       showAlert("Atenção", "Preencha todos os campos!");
       return;
     }
 
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, senha);
+      const cred = await signInWithEmailAndPassword(auth, formatUser(usuario), senha);
       const user = cred.user;
 
       // salva usuário logado localmente
       await AsyncStorage.setItem("usuarioLogado", JSON.stringify(user));
 
-      setEmail("");
+      setUsuario("");
       setSenha("");
-      showAlert("Sucesso", `Bem-vindo, ${user.email}!`);
+      showAlert("Sucesso", `Bem-vindo, ${usuario}!`);
 
       navigation.replace("Dashboard");
     } catch (err) {
@@ -39,13 +42,13 @@ export default function LoginCadastro({ navigation }) {
   };
 
   const handleCadastro = async () => {
-    if (!email || !senha) {
+    if (!usuario || !senha) {
       showAlert("Atenção", "Preencha todos os campos!");
       return;
     }
 
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email, senha);
+      const cred = await createUserWithEmailAndPassword(auth, formatUser(usuario), senha);
       const user = cred.user;
 
       // salva no AsyncStorage também
@@ -53,14 +56,24 @@ export default function LoginCadastro({ navigation }) {
 
       showAlert("Sucesso", "Usuário cadastrado com sucesso!");
 
-      setEmail("");
+      setUsuario("");
       setSenha("");
 
       // vai para o Dashboard direto
       navigation.replace("Dashboard");
     } catch (err) {
       console.log("Erro ao cadastrar:", err);
-      showAlert("Erro", err.message);
+      //showAlert("Erro", err.message);
+
+      if (err.code === "auth/weak-password") {
+        showAlert("Erro", "A senha deve ter pelo menos 6 caracteres.");
+      } else if (err.code === "auth/email-already-in-use") {
+        showAlert("Erro", "Este usuário já existe.");
+      } else if (err.code === "auth/invalid-email") {
+        showAlert("Erro", "Usuário inválido, tente outro nome.");
+      } else {
+        showAlert("Erro", "Não foi possível cadastrar. Tente novamente.");
+      }
     }
   };
 
@@ -78,11 +91,11 @@ export default function LoginCadastro({ navigation }) {
 
         <TextInput
           style={styles.input}
-          placeholder="E-mail"
+          placeholder="Usuario"
           placeholderTextColor="#aaa"
           autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
+          value={usuario}
+          onChangeText={setUsuario}
         />
 
         <TextInput
@@ -116,10 +129,10 @@ export default function LoginCadastro({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  background: { 
-    flex: 1, 
-    width: "100%", 
-    height: "100%" 
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%"
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -132,11 +145,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  title: { 
-    fontSize: 28, 
-    fontWeight: "bold", 
-    color: "#fff", 
-    marginBottom: 20 
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 20
   },
   input: {
     width: "100%",
@@ -153,14 +166,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 10,
   },
-  buttonText: { 
-    color: "#fff", 
-    fontSize: 18, 
-    fontWeight: "600" 
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600"
   },
-  link: { 
-    color: "#fff", 
-    marginTop: 15, 
-    textDecorationLine: "underline" 
+  link: {
+    color: "#fff",
+    marginTop: 15,
+    textDecorationLine: "underline"
   },
 });
