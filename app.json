@@ -2,6 +2,8 @@
   "expo": {
     "name": "hora-do-remedio-app",
     "slug": "hora-do-remedio-app",
+    "scheme": "hora-do-remedio-app",
+    "owner": "edsonmelo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +26,7 @@
       "package": "com.anonymous.horadoremedioapp"
     },
     "web": {
-      "favicon": "./assets/logo1.png"
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-video"

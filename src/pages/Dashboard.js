@@ -89,13 +89,15 @@ export default function Dashboard({ navigation }) {
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => {
-            if (menuAberto) toggleMenu(); // fecha o menu
-            navigation.navigate("ListaPacientes"); // vai para dashboard
+            if (menuAberto) toggleMenu();
+            navigation.navigate("ListaPacientes");
           }}
         >
           <Icon name="user" size={18} color="#fff" />
           <Text style={styles.menuText}>Pacientes</Text>
         </TouchableOpacity>
+
+        
 
         <TouchableOpacity
           style={styles.menuItem}

@@ -5,7 +5,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function ListaPacientes({ navigation }) {
   const [pacientes, setPacientes] = useState([]);
-  const insets = useSafeAreaInsets(); // pega os insets da tela
+  const insets = useSafeAreaInsets();
 
   const carregarPacientes = async () => {
     try {
@@ -38,15 +38,15 @@ export default function ListaPacientes({ navigation }) {
     const confirm = isWeb
       ? window.confirm('Deseja realmente excluir este paciente?')
       : await new Promise(resolve =>
-          Alert.alert(
-            'Confirmar exclusão',
-            'Deseja realmente excluir este paciente?',
-            [
-              { text: 'Cancelar', style: 'cancel', onPress: () => resolve(false) },
-              { text: 'Excluir', style: 'destructive', onPress: () => resolve(true) },
-            ]
-          )
-        );
+        Alert.alert(
+          'Confirmar exclusão',
+          'Deseja realmente excluir este paciente?',
+          [
+            { text: 'Cancelar', style: 'cancel', onPress: () => resolve(false) },
+            { text: 'Excluir', style: 'destructive', onPress: () => resolve(true) },
+          ]
+        )
+      );
 
     if (!confirm) return;
 
@@ -74,6 +74,15 @@ export default function ListaPacientes({ navigation }) {
         {item.descricao ? <Text>Descrição: {item.descricao}</Text> : null}
       </View>
       <View style={styles.acoes}>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#32CD32', marginBottom: 5 }]}
+          // passa o ID do paciente para filtrar medicamentos
+          onPress={() => navigation.navigate('ListaMedicamentos', { pacienteId: item.id })}
+        >
+          <Text style={styles.buttonText}>Medicamentos</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.button, { backgroundColor: '#1e90ff', marginBottom: 5 }]}
           onPress={() => navigation.navigate('CadastroPaciente', { paciente: item })}
@@ -99,7 +108,7 @@ export default function ListaPacientes({ navigation }) {
           data={pacientes}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: insets.bottom + 140 }} // garante espaço seguro
+          contentContainerStyle={{ paddingBottom: insets.bottom + 140 }}
         />
       )}
 
@@ -135,29 +144,30 @@ const styles = StyleSheet.create({
       ? { boxShadow: '0px 2px 4px rgba(0,0,0,0.2)' }
       : { elevation: 3 }),
   },
-  nome: { 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    marginBottom: 5 
+  nome: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5
   },
-  acoes: { 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginLeft: 10 
+  acoes: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10
   },
-  button: { 
-    paddingVertical: 8, 
-    paddingHorizontal: 12, 
-    borderRadius: 10 
+  button: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10
   },
-  buttonText: { 
-    color: '#fff', 
-    fontWeight: 'bold' 
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold'
   },
-  msg: { textAlign: 'center', 
-    fontSize: 18, 
-    marginTop: 20, 
-    color: '#555' 
+  msg: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 20,
+    color: '#555'
   },
   bottomButtons: {
     position: 'absolute',
@@ -168,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  navButton: { 
+  navButton: {
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 25,
@@ -176,9 +186,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  navButtonText: { 
-    color: '#fff', 
-    fontSize: 18, 
-    fontWeight: '600' 
+  navButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600'
   },
 });
