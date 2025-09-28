@@ -12,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CommonActions } from "@react-navigation/native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function CadastroMedicamento({ navigation, route }) {
   const [medicamentos, setMedicamentos] = useState([]);
@@ -23,6 +24,7 @@ export default function CadastroMedicamento({ navigation, route }) {
   const [horarios, setHorarios] = useState("");
   const [descricao, setDescricao] = useState("");
   const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const pacienteId = route?.params?.pacienteId || null; // vincular ao paciente
   const insets = useSafeAreaInsets();
@@ -122,7 +124,41 @@ export default function CadastroMedicamento({ navigation, route }) {
       <Text style={styles.title}>Cadastro de Medicamento</Text>
 
       <TextInput placeholder="Nome *" style={styles.input} value={nome} onChangeText={setNome} />
-      <TextInput placeholder="Validade" style={styles.input} value={validade} onChangeText={setValidade} />
+      {/*<TextInput placeholder="Validade" style={styles.input} value={validade} onChangeText={setValidade} />*/}
+
+      {Platform.OS === "web" ? (
+        <TextInput
+          style={styles.input}
+          type="date" // funciona no react-native-web
+          value={validade}
+          onChange={(e) => setValidade(e.target.value)}
+          placeholder="Selecione a validade"
+        />
+      ) : (
+        <>
+          <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
+            <Text>{validade || "Selecione a validade"}</Text>
+          </TouchableOpacity>
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={new Date()}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  const d = selectedDate;
+                  const format = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")
+                    }/${d.getFullYear()}`;
+                  setValidade(format);
+                }
+              }}
+            />
+          )}
+        </>
+      )}
+
       <TextInput placeholder="Quantidade *" style={styles.input} value={quantidade} onChangeText={setQuantidade} keyboardType="numeric" />
       <TextInput placeholder="Frequência (em horas) *" style={styles.input} value={frequencia} onChangeText={setFrequencia} keyboardType="numeric" />
       <TextInput placeholder="Dosagem *" style={styles.input} value={dosagem} onChangeText={setDosagem} />

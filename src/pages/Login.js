@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Alert, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { auth } from "../../firebaseConfig";
@@ -49,18 +49,21 @@ export default function LoginCadastro({ navigation }) {
 
     try {
       const cred = await createUserWithEmailAndPassword(auth, formatUser(usuario), senha);
-      const user = cred.user;
+      // const user = cred.user;
 
       // salva no AsyncStorage também
-      await AsyncStorage.setItem("usuarioLogado", JSON.stringify(user));
-
+      // await AsyncStorage.setItem("usuarioLogado", JSON.stringify(user));
+      // Apenas mostra alerta de sucesso
       showAlert("Sucesso", "Usuário cadastrado com sucesso!");
 
       setUsuario("");
       setSenha("");
 
+      // Volta para tela de login
+      setUsuariosExistem(true);
+
       // vai para o Dashboard direto
-      navigation.replace("Dashboard");
+      // navigation.replace("Dashboard");
     } catch (err) {
       console.log("Erro ao cadastrar:", err);
       //showAlert("Erro", err.message);
